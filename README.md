@@ -11,6 +11,7 @@ To install the packages you need to use npm, first of all go to the project repo
 npm init
 ```
 
+After this you will find a file called package.json in your repository.
 Than you need to install all the packages
 
 ```bash
@@ -20,6 +21,8 @@ npm install express
 ```bash
 npm install body-parser
 ```
+
+You can see the packages installed in the package.json file, under the 'dependencies' variable.
 
 ## OpenWeather APIs
 
