@@ -5,20 +5,32 @@ const bodyParser = require("body-parser");
 const fs = require('fs');
 
 const app = express();
+app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.static("public"));
 
 const rawdata = fs.readFileSync('variables.json');
 const variables = JSON.parse(rawdata);
 const apiKey = variables.apiKey;
 
+var description = "";
+var query = "";
+var temp = null;
+var imgURL = "";
+
 app.get("/", function(req, res) {
-	res.sendFile(__dirname + "/index.html");
+	let info = "Search for a city to see the weather infos.";
+	if(temp != null){
+		info = "The temperature at " + query + " is " + temp + "C.";
+	}
+
+	res.render("index", {description: description, info: info, imgURL: imgURL});
 });
 
 app.post("/", function(req, res) {
 	// importante: aggiungi https://
-	const query = req.body.cityName;
+	query = req.body.cityName;
 	const units = "metric";
 	const url = "https://api.openweathermap.org/data/2.5/weather?q=" + query + "&appid=" + apiKey + "&units=" + units;
 	https.get(url, function(response) {
@@ -27,16 +39,18 @@ app.post("/", function(req, res) {
 		response.on("data", function(data) {
 			//data in formato esadecimale
 			const weatherData = JSON.parse(data);
-			const temp = weatherData.main.temp;
-			const description = weatherData.weather[0].description;
-			const icon = weatherData.weather[0].icon;
-			const imgURL = " http://openweathermap.org/img/wn/" + icon + "@2x.png"
+			const cod = weatherData.cod;
+			if(cod === 200){
+				temp = weatherData.main.temp;
+				description = "Description : " + weatherData.weather[0].description;
+				const icon = weatherData.weather[0].icon;
+				imgURL = " http://openweathermap.org/img/wn/" + icon + "@2x.png"
+			}else{
+				description = "Error: " +weatherData.message;
+				temp = null;
+			}
 
-			res.write("<p>Description: " + description + "</p>");
-			res.write("<h1>Temperatura a " + query + ": " + temp + "C.</h1>");
-			res.write("<img src=" + imgURL + ">");
-			// NB: ci può essere solo un res.send!
-			res.send();
+			res.redirect("/");
 		})
 	});
 })

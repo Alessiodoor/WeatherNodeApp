@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Weather app</title>
+	<link rel="stylesheet" type="text/css" href="css/styles.css">
+</head>
+<body>
+	<div class="box" id="heading">
+		<form action="/" method="post">
+			<h1>The waether app</h1>
+			<input id="cityIput" type="text" name="cityName" placeholder="City" required>
+			<button type="submit">Go</button>
+		</form>
+	</div>
+
+	<div class="box">
+		<p><%= description %></p>
+		<h1><%= info %></h1>
+		<img src="<%= imgURL %>">
+	</div>
+</body>
+</html>
