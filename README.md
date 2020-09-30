@@ -15,11 +15,7 @@ After this you will find a file called package.json in your repository.
 Than you need to install all the packages
 
 ```bash
-npm install express
-```
-
-```bash
-npm install body-parser
+npm install express body-parser ejs
 ```
 
 You can see the packages installed in the package.json file, under the 'dependencies' variable.
