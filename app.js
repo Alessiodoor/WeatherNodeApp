@@ -1,18 +1,13 @@
+require('dotenv').config()
 const express = require("express");
 const https = require("https");
 const bodyParser = require("body-parser");
-// readFileSync per leggere json nella cartella
-const fs = require('fs');
 
 const app = express();
 app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static("public"));
-
-const rawdata = fs.readFileSync('variables.json');
-const variables = JSON.parse(rawdata);
-const apiKey = variables.apiKey;
 
 var description = "";
 var query = "";
@@ -32,7 +27,7 @@ app.post("/", function(req, res) {
 	// importante: aggiungi https://
 	query = req.body.cityName;
 	const units = "metric";
-	const url = "https://api.openweathermap.org/data/2.5/weather?q=" + query + "&appid=" + apiKey + "&units=" + units;
+	const url = "https://api.openweathermap.org/data/2.5/weather?q=" + query + "&appid=" + process.env.API_KEY + "&units=" + units;
 	https.get(url, function(response) {
 		console.log(response.statusCode);
 
